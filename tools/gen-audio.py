@@ -122,10 +122,12 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     index = {}
     made = 0
-    for text in collect():
+    texts = collect()
+    for k, text in enumerate(texts, 1):
         name = hashlib.sha1((VERSION + "|" + VOICE + "|" + text).encode("utf-8")).hexdigest()[:12] + ".m4a"
         target = os.path.join(OUT, name)
         if not os.path.exists(target):
+            print(f"[{k}/{len(texts)}] {text}", flush=True)
             render(text, target)
             made += 1
         index[text] = name
