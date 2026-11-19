@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Erzeugt die deutschen Sprach-Clips für Fips mit der macOS-Stimme (aus der Schatzinsel übernommen).
 
-Aufruf (im Projektordner):  python3 tools/gen-audio.py ["Yannick (Premium)"]
+Aufruf (im Projektordner):  python3 tools/gen-audio.py ["Stimme"]   (ohne Angabe: die Stimme aus assets/audio/voice.txt)
 
 Fips spricht mit „Anna (Premium)" – bewusst eine andere Stimme als Koko in der Schatzinsel
 („Petra (Premium)"). Die benutzte Stimme steht in assets/audio/voice.txt und wird wieder benutzt.
