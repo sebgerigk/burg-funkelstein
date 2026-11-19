@@ -89,8 +89,10 @@ function mount(root, t, api) {
   }
 
   // Ein kleiner Punkt zeigt, wohin es geht – nur solange der Finger nicht unterwegs ist.
+  let cue = false;   // Hinweise erst nach der Ansage (während Fips spricht, soll nichts zappeln)
   function showDemo() {
-    demo.innerHTML = `<circle r="7"><animateMotion dur="${Math.max(1.4, len / 120).toFixed(2)}s" repeatCount="indefinite" path="${strokes[cur]}"/></circle>`;
+    if (!cue) return;
+    demo.innerHTML = `<circle r="7"><animateMotion dur="${Math.max(1.4, len / 120).toFixed(2)}s" repeatCount="3" path="${strokes[cur]}"/></circle>`;
   }
 
   function moveToken() {
@@ -160,6 +162,12 @@ function mount(root, t, api) {
 
   setStroke(0);
   api.setAnswer(token);
+  Promise.resolve(api.ready).then(() => {
+    if (!api.alive() || finished) return;
+    cue = true;
+    token.classList.add('cue');
+    if (!active) showDemo();
+  });
 }
 
 export const spuren = {

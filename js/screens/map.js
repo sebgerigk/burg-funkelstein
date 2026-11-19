@@ -2,8 +2,8 @@
 // Nichts ist gesperrt. Orte, die noch gebaut werden, tragen ein Gerüst.
 import { register, go } from '../engine/router.js';
 import { getState, settings } from '../engine/storage.js';
-import { sfx } from '../engine/audio.js';
-import { shake } from '../engine/util.js';
+import { sfx, preload } from '../engine/audio.js';
+import { shake, wait, withTimeout } from '../engine/util.js';
 import { PLACES } from '../content/places.js';
 import { T } from '../content/texts.js';
 import { sky, hills, castle, writeTower, treasury, musicGarden, magicForest, scaffold, road, tuft, flower } from '../art/world.js';
@@ -50,6 +50,7 @@ register('map', el => {
     </svg>
     <button class="round-btn small parents" aria-label="Eltern">${ICON.gear}</button>`;
 
+  preload([T.map, T.map_again, T.baustelle, T.castle_go, ...ids.map(id => PLACES[id].say), ...ids.map(id => PLACES[id].welcome), T.place_again, T.castle]);
   const fips = createFips({ autoHide: true });
   el.appendChild(fips.el);
   fips.say(greeted ? T.map_again : T.map);
@@ -73,8 +74,12 @@ register('map', el => {
     const d = spot(id).door;
     figure.style.transform = fig(d.x, d.y + 40);
     lastSpot = id;
-    fips.say(id === 'castle' ? T.castle_go : PLACES[id].say);
-    setTimeout(() => go(id === 'castle' ? 'castle' : 'place', id === 'castle' ? { from: { name: 'map' } } : { place: id }), 950);
+    // Erst weiter, wenn die Figur angekommen ist UND Fips den Ort fertig genannt hat –
+    // sonst schneidet der nächste Bildschirm den Satz ab.
+    const said = fips.say(id === 'castle' ? T.castle_go : PLACES[id].say);
+    Promise.all([withTimeout(said, 3000), wait(950)]).then(() => {
+      if (el.isConnected) go(id === 'castle' ? 'castle' : 'place', id === 'castle' ? { from: { name: 'map' } } : { place: id });
+    });
   });
   el.querySelector('.parents').addEventListener('click', () => { sfx('tap'); openGate(() => go('eltern')); });
 });

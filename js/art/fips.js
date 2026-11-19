@@ -118,6 +118,23 @@ export function createFips({ autoHide = false } = {}) {
     el.classList.add('cheer');
   }
 
+  // Ab und zu blinzeln oder den Kopf neigen – nur kurz, damit Fips lebendig wirkt,
+  // ohne dass er ständig neu gezeichnet werden muss.
+  const idle = () => {
+    if (!el.isConnected) { if (started) return; setTimeout(idle, 500); return; }
+    started = true;
+    if (!el.classList.contains('talking') && !el.classList.contains('asleep')) {
+      const cls = Math.random() < 0.7 ? 'blink' : 'tilt';
+      el.classList.remove('blink', 'tilt');
+      void el.offsetWidth;
+      el.classList.add(cls);
+      setTimeout(() => el.classList.remove(cls), cls === 'blink' ? 350 : 1700);
+    }
+    setTimeout(idle, 3500 + Math.random() * 3500);
+  };
+  let started = false;
+  setTimeout(idle, 2000);
+
   btn.addEventListener('click', () => {
     sfx('tap');
     if (onTap) onTap();

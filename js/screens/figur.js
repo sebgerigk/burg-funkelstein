@@ -1,7 +1,7 @@
 // Beim ersten Start: Fips stellt sich vor, das Kind wählt seine Figur, dann die kleine Geschichte.
 // Auch aus dem Elternbereich erreichbar („Figur neu wählen").
 import { register, go } from '../engine/router.js';
-import { sfx } from '../engine/audio.js';
+import { sfx, preload } from '../engine/audio.js';
 import { getState, setFigure, setIntroSeen } from '../engine/storage.js';
 import { replay, wait } from '../engine/util.js';
 import { T, FIGURES } from '../content/texts.js';
@@ -18,6 +18,7 @@ register('figur', el => {
   fips.el.classList.add('big');
   el.appendChild(fips.el);
   const goOn = el.querySelector('.go-on');
+  preload([T.hello, T.who, ...Object.values(FIGURES).map(f => f.you), ...T.story, T.map]);
   fips.say([T.hello, T.who]);
 
   let chosen = null;

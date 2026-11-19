@@ -1,7 +1,7 @@
 // Die eigene Burg: hier stehen alle Geschenke. Antippen lässt sie sich bewegen und klingen.
 import { register, go } from '../engine/router.js';
 import { getState } from '../engine/storage.js';
-import { sfx } from '../engine/audio.js';
+import { sfx, preload } from '../engine/audio.js';
 import { replay } from '../engine/util.js';
 import { GIFTS, giftById } from '../content/castle.js';
 import { T, FIGURES, giftName, gemsText } from '../content/texts.js';
@@ -31,6 +31,7 @@ register('castle', (el, { from = { name: 'map' }, highlight = null } = {}) => {
   const count = Object.keys(st.owned).length;
   el.innerHTML = `<div class="castle-view">${castleScene({ owned: st.owned, gems: st.gems, figure: st.figure, highlight, order: GIFTS.map(g => g.id) })}</div>
     <header class="hud"><button class="round-btn back" aria-label="Zurück">${ICON.back}</button><div class="plank">Deine Burg</div><span></span></header>`;
+  preload([T.castle, T.castle_empty, ...GIFTS.filter(g => st.owned[g.id]).map(giftName)]);
   const fips = createFips({ autoHide: true });
   el.appendChild(fips.el);
   fips.say(count || st.gems ? T.castle : [T.castle, T.castle_empty]);

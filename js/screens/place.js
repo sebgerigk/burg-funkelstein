@@ -3,7 +3,7 @@
 import { register, go } from '../engine/router.js';
 import { getState } from '../engine/storage.js';
 import { stationVisible } from '../engine/level.js';
-import { sfx } from '../engine/audio.js';
+import { sfx, preload } from '../engine/audio.js';
 import { PLACES } from '../content/places.js';
 import { T } from '../content/texts.js';
 import { sky, hills, writeTower, treasury, magicForest } from '../art/world.js';
@@ -54,6 +54,7 @@ register('place', (el, { place }) => {
       ${stationIcon(s.id)}${played(s) ? `<span class="st-flag">${flagSvg('#ffd23f')}</span>` : ''}
     </button>`).join('')}`;
 
+  preload([pl.welcome, T.place_again]);
   const fips = createFips({ autoHide: true });
   el.appendChild(fips.el);
   if (!welcomed.has(place)) { welcomed.add(place); fips.say(pl.welcome); } else fips.say(T.place_again);

@@ -74,7 +74,9 @@ svg { display: block; }
 
 /* ---------- Fips ---------- */
 .fips { position: absolute; left: 1.4vmin; bottom: 1vmin; z-index: 7; display: flex; align-items: flex-end; gap: 2vmin; pointer-events: none; }
-.fips-btn { pointer-events: auto; width: clamp(110px, 19vmin, 180px); flex: none; animation: fipsBob 3.4s ease-in-out infinite; }
+/* Fips bewegt sich nur ab und zu (Blinzeln, Kopf neigen – siehe art/fips.js) und beim Jubeln.
+   Dauernde Bewegung würde ihn ständig neu zeichnen lassen; auf dem iPad stockt dann die Sprache. */
+.fips-btn { pointer-events: auto; width: clamp(110px, 19vmin, 180px); flex: none; }
 .fips.big .fips-btn { width: clamp(150px, 28vmin, 260px); }
 .fips-svg { width: 100%; overflow: visible; }
 .bubble {
@@ -87,15 +89,18 @@ svg { display: block; }
   content: ""; position: absolute; left: -1.5vmin; bottom: 2.2vmin; width: 2.4vmin; height: 2.4vmin; background: #fff;
   border-left: 4px solid var(--ink); border-bottom: 4px solid var(--ink); transform: rotate(45deg); border-bottom-left-radius: .6vmin;
 }
-.fips-eye { transform-box: fill-box; transform-origin: center; animation: blink 4.8s infinite; }
+.fips-eye { transform-box: fill-box; transform-origin: center; }
+.fips.blink .fips-eye { animation: blinkOnce .3s ease-in-out; }
 .fips-eyes-shut { display: none; }
 .fips-mouth { opacity: 0; }
-.talking .fips-mouth { animation: mouth .17s ease-in-out infinite alternate; }
+/* Mund im ruhigen Takt auf und zu (in Stufen statt fließend – weniger Zeichenarbeit, während er spricht) */
+.talking .fips-mouth { animation: mouthStep .44s step-end infinite; }
 .fips-wing { transform-box: fill-box; }
-.fips-wing-l { transform-origin: 95% 30%; animation: wingL 3.4s ease-in-out infinite; }
-.fips-wing-r { transform-origin: 5% 30%; animation: wingR 3.4s ease-in-out infinite; }
-.fips-head { transform-box: fill-box; transform-origin: 50% 90%; animation: headTilt 7s ease-in-out infinite; }
-.fips-tail { transform-box: fill-box; transform-origin: 0% 100%; animation: tail 2.6s ease-in-out infinite; }
+.fips-wing-l { transform-origin: 95% 30%; }
+.fips-wing-r { transform-origin: 5% 30%; }
+.fips-head { transform-box: fill-box; transform-origin: 50% 90%; }
+.fips.tilt .fips-head { animation: headTilt 1.6s ease-in-out; }
+.fips-tail { transform-box: fill-box; transform-origin: 0% 100%; }
 .cheer .fips-btn { animation: hop .42s ease 2; }
 .cheer .fips-wing-l { animation: flapL .13s ease-in-out 6 alternate; }
 .cheer .fips-wing-r { animation: flapR .13s ease-in-out 6 alternate; }
@@ -115,15 +120,9 @@ svg { display: block; }
 .logo-row { display: block; }
 .logo-row.small { font-size: .62em; color: #fff; }
 .logo-row span { display: inline-block; animation: letterBob 2.6s ease-in-out infinite; animation-delay: calc(var(--i) * .13s); }
-.title-fips { position: absolute; left: 5vw; bottom: 4vmin; width: 26vmin; z-index: 6; animation: fipsBob 3.4s ease-in-out infinite; }
+.title-fips { position: absolute; left: 5vw; bottom: 4vmin; width: 26vmin; z-index: 6; }
 .screen-title .start { position: absolute; left: 50%; bottom: 7vmin; translate: -50% 0; z-index: 7; animation: pulseBtn 1.8s ease-in-out infinite; }
 .storage-warning { position: absolute; left: 50%; top: 30vmin; translate: -50% 0; z-index: 8; width: min(86vw, 640px); background: #fff3a8; border: 4px solid var(--ink); border-radius: 2vmin; padding: 1.2vmin 2vmin; font-weight: 700; font-size: clamp(15px, 2.4vmin, 22px); text-align: center; }
-.cloud-a { animation: drift 26s ease-in-out infinite alternate; }
-.sun-rays { transform-box: fill-box; transform-origin: center; animation: spin360 60s linear infinite; }
-.flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker .9s ease-in-out infinite alternate; }
-.firefly { animation: firefly 3.2s ease-in-out infinite; }
-.twinkle-slow { transform-box: fill-box; transform-origin: center; animation: twinkleSlow 3.6s ease-in-out infinite; }
-.cloud-b { animation: drift 34s ease-in-out infinite alternate-reverse; }
 
 /* ---------- Figur wählen ---------- */
 .meadow { position: absolute; inset: 0; background: linear-gradient(#8fd8ff 0 48%, #a6e38f 48% 56%, #7fd36b 56%); }
@@ -142,9 +141,6 @@ svg { display: block; }
 .map-place:active { filter: brightness(1.08); }
 .map-place.building > g { opacity: .92; }
 .map-figure { transition: transform .9s cubic-bezier(.45, .05, .35, 1); }
-.fig-bob { animation: figBob 2.4s ease-in-out infinite; }
-.twinkle { transform-box: fill-box; transform-origin: center; animation: twinkle 2.6s ease-in-out infinite; }
-.notes { animation: float 2.4s ease-in-out infinite; }
 
 /* ---------- Ort ---------- */
 .station {
@@ -155,7 +151,7 @@ svg { display: block; }
 }
 .station:active { transform: scale(.95); }
 .station .st-icon { width: 76%; }
-.station.next { animation: pulse 1.6s ease-in-out infinite; box-shadow: 0 0 0 1.2vmin rgba(255, 210, 63, .85), 0 1.1vmin 0 rgba(61, 43, 74, .35); }
+.station.next { animation: pulse 1.6s ease-in-out 3.5s 4; box-shadow: 0 0 0 1.2vmin rgba(255, 210, 63, .85), 0 1.1vmin 0 rgba(61, 43, 74, .35); }
 .st-flag { position: absolute; top: -3.5vmin; right: 1vmin; width: 6vmin; }
 .steps i {
   position: absolute; z-index: 3; width: 3vmin; height: 4.2vmin; translate: -50% -50%; border-radius: 50%;
@@ -260,7 +256,8 @@ svg { display: block; }
 .ink path { opacity: .95; }
 .trace-svg .fill { opacity: 0; stroke: none; transition: opacity .6s; }
 .trace-svg .fill.show { opacity: .85; }
-.token .ring { fill: rgba(255, 210, 63, .35); stroke: var(--gold); stroke-width: 5; transform-box: fill-box; transform-origin: center; animation: ringPulse 1.3s ease-in-out infinite; }
+.token .ring { fill: rgba(255, 210, 63, .35); stroke: var(--gold); stroke-width: 5; transform-box: fill-box; transform-origin: center; }
+.token.cue .ring { animation: ringPulse 1.3s ease-in-out 4; }
 .token.held .ring { animation: none; opacity: 0; }
 .token.glow { filter: none; animation: none !important; }
 .token.glow .ring { stroke-width: 9; animation: ringPulse .6s ease-in-out infinite; }
@@ -372,7 +369,7 @@ svg { display: block; }
 /* ---------- Burg ---------- */
 .gift { cursor: pointer; transform-box: fill-box; transform-origin: 50% 100%; }
 .gift.new { animation: newGift 1s ease-in-out 3; }
-.gift .cloth { transform-box: fill-box; transform-origin: 0 50%; animation: flag 1.5s ease-in-out infinite alternate; }
+.gift .cloth { transform-box: fill-box; transform-origin: 0 50%; }
 .anim-hop { animation: gHop .55s ease; }
 .anim-wiggle { animation: wobble .6s ease; }
 .anim-flutter .cloth { animation: flag .18s ease-in-out 6 alternate; }
@@ -423,7 +420,6 @@ svg { display: block; }
 
 /* Sanfte Schatten unter allem, was man antippen oder ziehen kann */
 .item .thing, .gem .thing, .apple .thing, .pic-item .pic, .mini .dot .thing, .gift-card .gift-thumb, .figure-pick .figure-svg { filter: drop-shadow(0 .5vmin .25vmin rgba(61, 43, 74, .22)); }
-.fips-svg, .title-fips svg { filter: drop-shadow(0 .4vmin .3vmin rgba(61, 43, 74, .15)); }
 
 /* ---------- Effekte ---------- */
 .shake { animation: shake .42s; }
@@ -449,7 +445,8 @@ svg { display: block; }
 @keyframes figBob { 50% { transform: translateY(-6px); } }
 @keyframes headTilt { 0%, 40%, 100% { transform: rotate(0); } 46%, 58% { transform: rotate(-6deg); } 70%, 82% { transform: rotate(5deg); } 90% { transform: rotate(0); } }
 @keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 95%, 98% { transform: scaleY(.08); } }
-@keyframes mouth { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mouthStep { 0% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes blinkOnce { 50% { transform: scaleY(.08); } }
 @keyframes wingL { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(8deg); } }
 @keyframes wingR { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-8deg); } }
 @keyframes tail { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-6deg); } }

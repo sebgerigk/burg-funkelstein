@@ -2,7 +2,7 @@
 // Beim Hinzufügen von Dateien: CORE ergänzen und CACHE hochzählen (tools/check.mjs prüft das).
 // Strategie: alles aus dem Cache beantworten und im Hintergrund auffrischen –
 // so startet die App sofort und holt sich Updates beim nächsten Öffnen mit Netz.
-const CACHE = 'funkelstein-v4';
+const CACHE = 'funkelstein-v5';
 
 const CORE = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css', 'js/app.js', 'js/engine/audio.js', 'js/engine/level.js',
@@ -41,6 +41,13 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
+    if (new URL(req.url).pathname.endsWith('/assets/audio/index.json')) {
+      try {
+        const res = await fetch(req, { cache: 'no-store' });
+        if (res.ok) { cache.put(req, res.clone()); return res; }
+      } catch { /* offline: gespeicherte Liste nehmen */ }
+      return (await cache.match(req, { ignoreSearch: true })) || new Response('{}', { headers: { 'Content-Type': 'application/json' } });
+    }
     const cached = await cache.match(req, { ignoreSearch: true });
     const refresh = fetch(req).then(res => {
       if (res && res.ok) cache.put(req, res.clone());
