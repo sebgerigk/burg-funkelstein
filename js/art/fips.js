@@ -8,6 +8,7 @@ const WING = '#b98cff', WING2 = '#9067e0', HORN = '#fff4dc', SPIKE = '#ff9f43';
 export function fipsSvg() {
   return `<svg class="fips-svg" viewBox="0 0 200 240" aria-hidden="true">
   <g stroke="${INK}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+    <ellipse class="fips-shadow" cx="104" cy="232" rx="66" ry="8" fill="#2f2a3d" opacity=".18" stroke="none"/>
     <g class="fips-tail">
       <path d="M138 206 Q186 210 184 170 Q182 146 166 140" fill="none" stroke="${INK}" stroke-width="17"/>
       <path d="M138 206 Q186 210 184 170 Q182 146 166 140" fill="none" stroke="${G}" stroke-width="9"/>
@@ -25,6 +26,7 @@ export function fipsSvg() {
       <ellipse cx="100" cy="172" rx="50" ry="52" fill="${G}"/>
       <ellipse cx="100" cy="182" rx="31" ry="36" fill="${BELLY}"/>
       <path d="M76 168 Q100 176 124 168 M72 186 Q100 195 128 186 M78 204 Q100 211 122 204" stroke="${BELLY2}" stroke-width="3" fill="none"/>
+      <path d="M62 150 Q66 132 80 124" stroke="#8fe09a" stroke-width="6" fill="none"/>
       <path d="M58 168 Q50 182 62 190" fill="${G}" />
       <path d="M142 168 Q150 182 138 190" fill="${G}" />
       <ellipse cx="74" cy="222" rx="18" ry="11" fill="${G}"/>
@@ -35,6 +37,7 @@ export function fipsSvg() {
         <path d="M130 46 L138 14 L116 38Z" fill="${HORN}"/>
         <path d="M88 40 L94 24 L100 38 L106 24 L112 40" fill="${SPIKE}"/>
         <ellipse cx="100" cy="86" rx="58" ry="50" fill="${G}"/>
+        <path d="M58 64 Q70 44 96 40" stroke="#8fe09a" stroke-width="7" fill="none"/>
         <ellipse cx="100" cy="110" rx="36" ry="24" fill="#8fe09a" stroke="none"/>
         <circle cx="90" cy="104" r="3" fill="${G2}" stroke="none"/>
         <circle cx="110" cy="104" r="3" fill="${G2}" stroke="none"/>

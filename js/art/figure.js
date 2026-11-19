@@ -45,6 +45,7 @@ export function figureSvg(id) {
       <circle cx="60" cy="${head - 34}" r="3.5" fill="#ff6b8b" stroke-width="2"/>`;
   }
   return `<svg class="figure-svg" viewBox="0 0 120 200" aria-hidden="true"><g stroke="${INK}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+    <ellipse cx="60" cy="191" rx="34" ry="6" fill="#2f2a3d" opacity=".18" stroke="none"/>
     ${cape}${hairBack}${legs}${shoes}${body}${arms}${face}${top}
   </g></svg>`;
 }

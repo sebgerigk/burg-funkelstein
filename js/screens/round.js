@@ -16,6 +16,7 @@ import { createFips } from '../art/fips.js';
 import { ponySvg, flagSvg, chestSvg } from '../art/things.js';
 import { giftThumb, fitThumbs } from './castle.js';
 import { ICON } from '../art/icons.js';
+import { roomSvg } from '../art/rooms.js';
 
 const GAMES = { zaehlen, spuren, wald };
 const IDLE_MS = 10000;
@@ -38,7 +39,7 @@ register('round', (el, { place, idx }) => {
 
   const flagColors = ['#e8504f', '#ffd23f', '#4aa3ff', '#5cc96b', '#b98cff'];
   el.innerHTML = `
-    <div class="round-bg"></div>
+    ${roomSvg(place)}
     <header class="round-top">
       <button class="round-btn small back" aria-label="Zurück">${ICON.back}</button>
       <div class="trail">
