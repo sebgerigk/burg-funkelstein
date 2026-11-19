@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Burg Funkelstein</title>
+<meta name="description" content="Spielen und lernen mit Fips, dem kleinen Drachen – für Kinder von drei bis vier Jahren.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Funkelstein">
+<meta name="theme-color" content="#5cbf54">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+<link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app">
+  <!-- Wird ersetzt, sobald die App gestartet ist. Bleibt stehen, wenn etwas schiefgeht. -->
+  <div class="boot" id="boot">
+    <div class="boot-card">
+      <h1>Burg Funkelstein</h1>
+      <p id="boot-msg">Die Zugbrücke wird heruntergelassen …</p>
+    </div>
+  </div>
+</div>
+<!-- Im Hochformat: freundlicher Hinweis, das iPad zu drehen (die App ist fürs Querformat gebaut). -->
+<div id="rotate" aria-live="polite">
+  <svg viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#3d2b4a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <rect class="rot-pad" x="60" y="30" width="80" height="130" rx="14" fill="#fff7e6"/>
+    <path d="M40 150 A80 80 0 0 1 30 80" /><path d="M20 92 L30 78 L44 88"/></g></svg>
+  <p>Bitte das iPad quer halten.</p>
+</div>
+<script>
+  // Läuft auch dann, wenn die eigentliche App (ES-Module) nicht starten kann.
+  (function () {
+    var msg = document.getElementById('boot-msg');
+    function show(html) { if (msg && document.getElementById('boot')) msg.innerHTML = html; }
+    if (location.protocol === 'file:') {
+      show('Die App kann nicht direkt als Datei geöffnet werden.<br>' +
+        'Bitte <b>„Burg Funkelstein starten.command"</b> doppelklicken<br>oder im Browser <b>http://localhost:8140</b> öffnen.<br><br>' +
+        '<small>This app must be opened through a web server, not as a file.</small>');
+      return;
+    }
+    window.addEventListener('error', function (e) {
+      show('Die App konnte nicht starten.<br><small>' + (e.message || 'Unbekannter Fehler') + '</small>');
+    });
+    window.addEventListener('unhandledrejection', function (e) {
+      show('Die App konnte nicht starten.<br><small>' + ((e.reason && e.reason.message) || e.reason || 'Unbekannter Fehler') + '</small>');
+    });
+  })();
+</script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

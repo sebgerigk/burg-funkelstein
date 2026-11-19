@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "burg-funkelstein",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["tools/serve.py", "8140"],
+      "port": 8140
+    }
+  ]
+}

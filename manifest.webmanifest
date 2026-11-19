@@ -1,0 +1,16 @@
+{
+  "name": "Burg Funkelstein",
+  "short_name": "Funkelstein",
+  "description": "Spielen und lernen mit Fips, dem kleinen Drachen – für Kinder von drei bis vier Jahren.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#5cbf54",
+  "theme_color": "#5cbf54",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
