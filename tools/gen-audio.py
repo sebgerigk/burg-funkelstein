@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """Erzeugt die deutschen Sprach-Clips für Fips mit der macOS-Stimme (aus der Schatzinsel übernommen).
 
-Aufruf (im Projektordner):  python3 tools/gen-audio.py ["Petra (Premium)"]
+Aufruf (im Projektordner):  python3 tools/gen-audio.py ["Yannick (Premium)"]
+
+Fips spricht mit „Yannick (Premium)" – bewusst eine andere Stimme als Koko in der Schatzinsel
+(„Petra (Premium)"). Die Stimme muss einmal geladen werden: Systemeinstellungen > Bedienungshilfen >
+Gesprochene Inhalte > Systemstimme > Stimmen verwalten … > Deutsch > Yannick (Premium).
+Anhören:  say -v "Yannick (Premium)" "Hallo! Ich bin Fips, der kleine Drache."
+Alle deutschen Stimmen:  say -v "?" | grep de_DE
 
 Liest alle Sätze aus assets/audio/texts.json (erzeugt mit `node tools/list-texts.mjs`),
 erzeugt pro Satz eine kleine AAC-Datei in assets/audio/ und schreibt
@@ -20,7 +26,7 @@ import wave
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets", "audio")
-VOICE = sys.argv[1] if len(sys.argv) > 1 else "Petra (Premium)"
+VOICE = sys.argv[1] if len(sys.argv) > 1 else "Yannick (Premium)"
 # Kurze Stille vor jedem Clip: ohne sie verschluckt die Tonausgabe gern die erste Silbe.
 LEAD_IN = "[[slnc 250]] "
 VERSION = "v1"
@@ -88,7 +94,20 @@ def collect():
         return json.load(f)
 
 
+def check_voice():
+    """Bricht mit einem Hinweis ab, wenn die Stimme nicht installiert ist (say würde sonst still eine andere nehmen)."""
+    listing = subprocess.run(["say", "-v", "?"], capture_output=True, text=True, check=True).stdout
+    names = [line.split("  ")[0].strip() for line in listing.splitlines() if line.strip()]
+    if VOICE not in names:
+        german = [line.split("  ")[0].strip() for line in listing.splitlines() if "de_DE" in line]
+        sys.exit(f"Die Stimme „{VOICE}\" ist nicht installiert.\n"
+                 "Laden: Systemeinstellungen > Bedienungshilfen > Gesprochene Inhalte > Systemstimme >\n"
+                 f"Stimmen verwalten … > Deutsch > {VOICE}.\n"
+                 f"Installierte deutsche Stimmen: {', '.join(german) or 'keine'}")
+
+
 def main():
+    check_voice()
     os.makedirs(OUT, exist_ok=True)
     index = {}
     made = 0
