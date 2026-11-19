@@ -19,6 +19,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -26,7 +27,15 @@ import wave
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets", "audio")
-VOICE = sys.argv[1] if len(sys.argv) > 1 else "Yannick (Premium)"
+# Die Stimme: als Argument angegeben, sonst die zuletzt benutzte (assets/audio/voice.txt), sonst Yannick.
+# So bleibt Fips bei späteren Läufen bei derselben Stimme.
+VOICE_FILE = os.path.join(OUT, "voice.txt")
+if len(sys.argv) > 1:
+    VOICE = sys.argv[1]
+elif os.path.exists(VOICE_FILE):
+    VOICE = open(VOICE_FILE, encoding="utf-8").read().strip()
+else:
+    VOICE = "Yannick (Premium)"
 # Kurze Stille vor jedem Clip: ohne sie verschluckt die Tonausgabe gern die erste Silbe.
 LEAD_IN = "[[slnc 250]] "
 VERSION = "v1"
@@ -96,10 +105,12 @@ def collect():
 
 def check_voice():
     """Bricht mit einem Hinweis ab, wenn die Stimme nicht installiert ist (say würde sonst still eine andere nehmen)."""
+    # Zeilen wie „Anna (Premium)      de_DE    # Hallo! …" oder „Eddy (Deutsch (Deutschland)) de_DE # …"
     listing = subprocess.run(["say", "-v", "?"], capture_output=True, text=True, check=True).stdout
-    names = [line.split("  ")[0].strip() for line in listing.splitlines() if line.strip()]
+    voices = [m.groups() for m in (re.match(r"^(.*?)\s+([a-z]{2,3}_[A-Z]{2})\s+#", line) for line in listing.splitlines()) if m]
+    names = [name for name, _ in voices]
     if VOICE not in names:
-        german = [line.split("  ")[0].strip() for line in listing.splitlines() if "de_DE" in line]
+        german = sorted({name for name, loc in voices if loc == "de_DE"})
         sys.exit(f"Die Stimme „{VOICE}\" ist nicht installiert.\n"
                  "Laden: Systemeinstellungen > Bedienungshilfen > Gesprochene Inhalte > Systemstimme >\n"
                  f"Stimmen verwalten … > Deutsch > {VOICE}.\n"
@@ -125,6 +136,8 @@ def main():
             os.remove(os.path.join(OUT, f))
     with open(os.path.join(OUT, "index.json"), "w", encoding="utf-8") as f:
         json.dump(index, f, ensure_ascii=False, indent=1)
+    with open(VOICE_FILE, "w", encoding="utf-8") as f:
+        f.write(VOICE + "\n")
     print(f"{len(index)} Clips im Index, {made} neu erzeugt (Stimme: {VOICE})")
 
 
