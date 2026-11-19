@@ -88,6 +88,20 @@ export function stationIcon(id) {
       ${thingG('edelstein', 76, 74, .22, '#ff6b8b')}${thingG('edelstein', 90, 90, .22, '#ff6b8b')}${thingG('edelstein', 104, 106, .22, '#ff6b8b')}`);
     case 'zahl-mehr': return box(`<path d="M6 70 H54 L48 104 H12Z" fill="#d9a35f"/><path d="M66 70 H114 L108 104 H72Z" fill="#d9a35f"/>
       ${thingG('apfel', 30, 58, .26)}${thingG('apfel', 78, 58, .26)}${thingG('apfel', 102, 58, .26)}${thingG('apfel', 90, 38, .26)}`);
+    case 'wald-farben': return box(`<rect x="10" y="70" width="44" height="36" rx="6" fill="#e8504f"/><rect x="66" y="70" width="44" height="36" rx="6" fill="#4aa3ff"/>
+      ${thingG('edelstein', 32, 40, .34, '#e8504f')}${thingG('edelstein', 88, 40, .34, '#4aa3ff')}`);
+    case 'wald-paare': return box(`<path d="M10 20 H54 V50 Q54 74 32 84 Q10 74 10 50Z" fill="#5cc96b"/><path d="M66 36 H110 V66 Q110 90 88 100 Q66 90 66 66Z" fill="#5cc96b"/>
+      <circle cx="32" cy="46" r="10" fill="#fff"/><circle cx="88" cy="62" r="10" fill="#fff"/>`);
+    case 'wald-schatten': return box(`${thingG('krone', 36, 44, .5)}<g opacity=".35">${thingG('krone', 84, 82, .5).replace(/fill="[^"]+"/g, 'fill="#3d2b4a"')}</g>`);
+    case 'wald-memory': return box(`<rect x="12" y="14" width="42" height="42" rx="8" fill="#9067e0"/><rect x="66" y="14" width="42" height="42" rx="8" fill="#fff"/>
+      <rect x="12" y="66" width="42" height="42" rx="8" fill="#fff"/><rect x="66" y="66" width="42" height="42" rx="8" fill="#9067e0"/>
+      ${thingG('apfel', 87, 35, .3)}${thingG('apfel', 33, 87, .3)}`);
+    case 'wald-passt': return box(`${thingG('apfel', 30, 40, .36)}${thingG('apfel', 90, 40, .36)}${thingG('apfel', 30, 92, .36)}${thingG('krone', 90, 92, .36)}`);
+    case 'wald-muster': return box(`<path d="M6 30 Q60 50 114 30" fill="none" stroke-width="4"/>
+      <path d="M14 34 H36 L25 70Z" fill="#e8504f"/><path d="M38 40 H60 L49 76Z" fill="#4aa3ff"/><path d="M62 40 H84 L73 76Z" fill="#e8504f"/>
+      <path d="M86 34 H108 L97 70Z" fill="#fff" stroke-dasharray="6 6"/><text x="97" y="58" text-anchor="middle" font-size="20" font-weight="900" fill="#3d2b4a" stroke="none">?</text>`);
+    case 'wald-ablauf': return box(`<ellipse cx="26" cy="64" rx="16" ry="21" fill="#fff4dc"/><path d="M48 64 H60 M56 58 L62 64 L56 70" fill="none" stroke-width="4"/>
+      <ellipse cx="92" cy="74" rx="18" ry="15" fill="#ffd23f"/><circle cx="96" cy="50" r="12" fill="#ffd23f"/><path d="M106 50 L114 52 L106 55Z" fill="#ff9f43" stroke-width="3"/>`);
     default: return box('<circle cx="60" cy="60" r="30" fill="#ffd23f"/>');
   }
 }

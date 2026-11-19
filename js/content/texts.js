@@ -81,6 +81,18 @@ export const T = {
   weiter: 'Und jetzt hier weiter!',
   formen: { kreis: 'Mal einen Kreis!', kreuz: 'Mal ein Kreuz!', quadrat: 'Mal ein Quadrat!', dreieck: 'Mal ein Dreieck!' },
   formen_done: { kreis: 'Ein Kreis!', kreuz: 'Ein Kreuz!', quadrat: 'Ein Quadrat!', dreieck: 'Ein Dreieck!' },
+
+  // Zauberwald
+  farben: 'Leg die Edelsteine in die passende Truhe.',
+  farbe: { rot: 'Rot!', blau: 'Blau!', gelb: 'Gelb!', gruen: 'Grün!', lila: 'Lila!' },
+  paare: 'Welcher Schild sieht genauso aus?',
+  schatten: 'Wer gehört zu welchem Schatten?',
+  memory: 'Finde die Paare!',
+  memory_look: 'Schau gut hin!',
+  passt: 'Was passt nicht dazu?',
+  muster: 'Welche Fahne kommt als Nächstes?',
+  ablauf2: 'Was war zuerst?',
+  ablauf3: 'Was kommt zuerst? Und dann?',
 };
 
 /** Figuren: id, wie Fips sie anspricht. */

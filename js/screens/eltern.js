@@ -38,7 +38,7 @@ register('eltern', el => {
         </section>
         <section>
           <h2>Orte</h2>
-          <p>Ausgeblendete Orte erscheinen nicht auf der Karte. Musikgarten und Zauberwald werden noch gebaut.</p>
+          <p>Ausgeblendete Orte erscheinen nicht auf der Karte. Der Musikgarten wird noch gebaut.</p>
           <div class="toggles">${PLACE_ORDER.map(id => `<button class="toggle ${s.places[id] ? 'on' : ''}" data-place="${id}">${PLACES[id].name}${PLACES[id].built ? '' : ' (Baustelle)'}</button>`).join('')}</div>
         </section>
         <section>

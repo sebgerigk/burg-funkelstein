@@ -32,6 +32,7 @@ export const GIFTS = [
   // Erster Besuch eines Ortes
   { id: 'krone', cat: 'besonders', the: 'die goldene Krone', sound: 'sparkle', anim: 'spin', first: 'zahl' },
   { id: 'feder', cat: 'besonders', the: 'die Schreibfeder', sound: 'sparkle', anim: 'flutter', first: 'schreib' },
+  { id: 'fee', cat: 'besonders', the: 'die kleine Fee', sound: 'sparkle', anim: 'hop', first: 'wald' },
 ];
 
 export const giftById = id => GIFTS.find(g => g.id === id);

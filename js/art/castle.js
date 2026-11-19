@@ -43,6 +43,7 @@ const ART = {
       }).join('')}`;
   },
   krone: () => `<g transform="translate(750 126) scale(1)">${thingG('krone', 50, 50, 1)}</g>`,
+  fee: () => fairy(1120, 430, 1.3),
   feder: () => `<path d="M806 456 Q846 376 892 364 Q874 420 818 464Z" fill="#fff"/><path d="M812 460 Q846 410 874 380" fill="none" stroke-width="3"/><path d="M806 456 L796 476" stroke-width="5"/>`,
 
   pony: () => `<g transform="translate(374 780) scale(1.3)">
@@ -114,6 +115,18 @@ const ART = {
     <path d="M0 -106 V-70" stroke-width="3"/><rect x="-10" y="-74" width="20" height="16" rx="3" fill="${WOOD}" stroke-width="3"/>
     <path d="M-30 -52 Q0 -44 30 -52" stroke="${WATER}" stroke-width="6" fill="none"/></g>`,
 };
+
+/** Die kleine Fee aus dem Zauberwald (Erstbesuch-Geschenk). (x, y) = Mitte. */
+export function fairy(x, y, s = 1) {
+  return `<g transform="translate(${x} ${y}) scale(${s})">
+    <ellipse cx="-18" cy="-6" rx="16" ry="24" transform="rotate(-25 -18 -6)" fill="#e6f7ff" opacity=".9"/>
+    <ellipse cx="18" cy="-6" rx="16" ry="24" transform="rotate(25 18 -6)" fill="#e6f7ff" opacity=".9"/>
+    <path d="M-12 30 L0 -6 L12 30Z" fill="#b98cff"/>
+    <circle cx="0" cy="-16" r="12" fill="#ffd9b8"/><path d="M-12 -18 Q-10 -32 0 -30 Q10 -32 12 -18 Q4 -24 0 -22 Q-4 -24 -12 -18Z" fill="#ffd23f"/>
+    <circle cx="-4" cy="-15" r="1.8" fill="${INK}" stroke="none"/><circle cx="4" cy="-15" r="1.8" fill="${INK}" stroke="none"/>
+    <path d="M10 6 L28 -12" stroke-width="3"/>${starAt(30, -14, 9)}
+  </g>`;
+}
 
 /** Wo das Kind steht (vor dem Tor auf der Brücke) und wo die Edelstein-Truhe steht. */
 const FIGURE_AT = { x: 800, y: 905 };

@@ -11,12 +11,13 @@ import { T, giftText } from '../content/texts.js';
 import { offerGifts, firstGift, GEM } from '../content/castle.js';
 import { zaehlen } from '../games/zaehlen.js';
 import { spuren } from '../games/spuren.js';
+import { wald } from '../games/wald.js';
 import { createFips } from '../art/fips.js';
 import { ponySvg, flagSvg, chestSvg } from '../art/things.js';
 import { giftThumb, fitThumbs } from './castle.js';
 import { ICON } from '../art/icons.js';
 
-const GAMES = { zaehlen, spuren };
+const GAMES = { zaehlen, spuren, wald };
 const IDLE_MS = 10000;
 const MAX_TODAY = 3;   // danach gibt es nur noch ein Geschenk („Probier doch mal was anderes!")
 

@@ -37,9 +37,17 @@ export const PLACES = {
   wald: {
     name: 'Zauberwald',
     say: 'Der Zauberwald!',
-    welcome: 'Willkommen im Zauberwald!',
-    built: false,
-    stations: [],
+    welcome: 'Willkommen im Zauberwald! Tippe auf ein Bild.',
+    built: true,
+    stations: [
+      { id: 'wald-farben', title: 'Farben sortieren', game: 'wald', opts: { kind: 'farben' } },
+      { id: 'wald-paare', title: 'Was ist gleich?', game: 'wald', opts: { kind: 'paare' } },
+      { id: 'wald-schatten', title: 'Schatten-Rätsel', game: 'wald', opts: { kind: 'schatten' } },
+      { id: 'wald-memory', title: 'Memory', game: 'wald', opts: { kind: 'memory' } },
+      { id: 'wald-passt', title: 'Was passt nicht?', game: 'wald', opts: { kind: 'passt' } },
+      { id: 'wald-muster', title: 'Fahnen-Muster', game: 'wald', opts: { kind: 'muster' } },
+      { id: 'wald-ablauf', title: 'Was kommt zuerst?', game: 'wald', opts: { kind: 'ablauf' } },
+    ],
   },
 };
 

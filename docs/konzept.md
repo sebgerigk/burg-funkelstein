@@ -1,6 +1,6 @@
 # Konzept: Burg Funkelstein
 
-Stand: 19.11.2026 · Status: Konzept (2. Fassung), Etappe 1 umgesetzt (siehe Abschnitt 11), noch nicht auf dem iPad erprobt
+Stand: 19.11.2026 · Status: Konzept (2. Fassung), Etappe 1 und Zauberwald umgesetzt (Abschnitte 11 und 12), noch nicht auf dem iPad erprobt
 Vorbild: Schatzinsel (gleiche Technik, gleicher Aufbau, neues Thema, jüngere Kinder)
 
 ---
@@ -354,3 +354,31 @@ Das Repository `burg-funkelstein` ist angelegt; dieses Konzept liegt dort als `d
 - **Hochformat:** Die App ist fürs Querformat gebaut; im Hochformat erscheint ein freundlicher Hinweis, das iPad zu drehen (außer im Elternbereich).
 
 **Geprüft** (automatisch im Browser, iPad-Größen 1024 × 768 und 1180 × 820): alle sieben Stationen auf der leichtesten und der schwersten Stufe durchgespielt, Hilfe nach zwei Fehlversuchen und nach langem Warten, Schatztruhe und Burg, Tageslimit mit Abschiedsbildschirm, Elternbereich. Noch nicht geprüft: auf einem echten iPad mit Finger und Stimme – das ist der nächste Schritt (siehe Abschnitt 9: Versteht das Kind die Aufgaben ohne Hilfe? Sind die Ziele groß genug? Ist die Runde zu lang?).
+
+---
+
+## 12. Umsetzung Zauberwald (aus Etappe 2)
+
+Der Zauberwald ist offen (keine Baustelle mehr) mit sieben Stationen: Farben sortieren, Was ist gleich?, Schatten-Rätsel, Memory, Was passt nicht?, Fahnen-Muster, Was kommt zuerst? Erstbesuch-Geschenk: **die kleine Fee**, sie schwebt neben der Burg. Der Musikgarten bleibt Baustelle, bis die Tieraufnahmen da sind; Pony-Weg (nur Groß) und Puzzle kommen später (Etappe 3 und 4).
+
+| Station | Klein (Stufe 1–2) | Groß (Stufe 3–4) |
+|---|---|---|
+| Farben sortieren | 2 Farben, 4–5 Edelsteine | 3–4 Farben, 6–8 Edelsteine |
+| Was ist gleich? | 2 Schilde, unterscheiden sich in Farbe bzw. Zeichen | 3 Schilde; Stufe 4: gleiche Farbe und Zeichen, aber andere Anzahl oder ein Streifen |
+| Schatten-Rätsel | 2 Schatten (Stufe 2: ähnliche Formen) | 3 Schatten (Stufe 4: ähnliche Formen) |
+| Memory | 2–3 Paare, Karten am Anfang kurz offen | 3–4 Paare, auf Stufe 4 ohne Vorschau |
+| Was passt nicht? | 2 gleiche + 1 anderes | 4 Bilder; Stufe 4 nach Oberbegriff (Tiere, Pflanzen, Dinge) |
+| Fahnen-Muster | AB | AAB/ABB, ABC |
+| Was kommt zuerst? | 2 Bilder: Was war zuerst? | 3 Bilder ordnen |
+
+**Beim Bauen entschieden:**
+
+- **Ziehen oder Tippen:** Beim Sortieren und bei den Schatten kann das Kind das Ding ziehen *oder* erst antippen (es hebt sich) und dann das Ziel antippen. Viele Dreijährige tippen lieber.
+- **Kürzere Runden**, wo eine Aufgabe länger dauert: Memory 3 Aufgaben, Farben und Schatten je 4, sonst 5.
+- **Memory ohne „falsch":** Passen zwei Karten nicht, drehen sie sich nach einer Sekunde einfach wieder um. Nach vielen Versuchen leuchtet ein passendes Paar.
+- **Fahnen mit Zeichen:** Jede Wimpelfarbe hat zusätzlich ein eigenes Zeichen (Herz, Stern, Kreis, Blume, Mond), damit das Muster auch bei Farbschwäche erkennbar ist.
+- **Bildfolgen:** nur eindeutige Abläufe – Ei → Küken, Samen → Blume, Apfel → Kerngehäuse, Schneemann bauen, Turm bauen, Eis essen. (Eine abbrennende Kerze war zu mehrdeutig.)
+- **Bilder** für Memory, Schatten und „Was passt nicht?" sind die Tiere, Pflanzen und Dinge aus der eigenen Burg – das Kind kennt sie schon.
+- **Sprache:** 16 neue Sätze. Bis sie auf dem Mac erzeugt sind (`python3 tools/gen-audio.py`, die Stimme Anna ist gespeichert), spricht für diese Sätze die Sprachausgabe des iPads.
+
+**Geprüft** (automatisch im Browser, 1024 × 768 und 1180 × 820): alle sieben Stationen auf der leichtesten und der schwersten Stufe durchgespielt, Memory dreht falsche Paare zurück, Fee in der Burg, alle 14 Stationen der App erneut durchgespielt.
