@@ -16,7 +16,7 @@ Dann im Browser <http://localhost:8140> öffnen. Auf dem iPad im gleichen WLAN: 
 
 ## Sprache für Fips
 
-Ohne Clips spricht die Sprachausgabe des Geräts. Schönere, gleichmäßige Clips entstehen auf dem Mac mit der Stimme „Yannick (Premium)" (bewusst eine andere als in der Schatzinsel). Die Stimme einmal laden: Systemeinstellungen > Bedienungshilfen > Gesprochene Inhalte > Systemstimme > Stimmen verwalten … > Deutsch > Yannick (Premium). Dann:
+Ohne Clips spricht die Sprachausgabe des Geräts. Schönere, gleichmäßige Clips entstehen auf dem Mac mit der Stimme „Anna (Premium)" (bewusst eine andere als Petra in der Schatzinsel; sie steht in `assets/audio/voice.txt` und wird beim nächsten Lauf wieder benutzt). Nach neuen Sätzen:
 
 ```bash
 node tools/list-texts.mjs

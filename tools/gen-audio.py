@@ -3,10 +3,11 @@
 
 Aufruf (im Projektordner):  python3 tools/gen-audio.py ["Yannick (Premium)"]
 
-Fips spricht mit „Yannick (Premium)" – bewusst eine andere Stimme als Koko in der Schatzinsel
-(„Petra (Premium)"). Die Stimme muss einmal geladen werden: Systemeinstellungen > Bedienungshilfen >
-Gesprochene Inhalte > Systemstimme > Stimmen verwalten … > Deutsch > Yannick (Premium).
-Anhören:  say -v "Yannick (Premium)" "Hallo! Ich bin Fips, der kleine Drache."
+Fips spricht mit „Anna (Premium)" – bewusst eine andere Stimme als Koko in der Schatzinsel
+(„Petra (Premium)"). Die benutzte Stimme steht in assets/audio/voice.txt und wird wieder benutzt.
+Eine Stimme laden: Systemeinstellungen > Bedienungshilfen > Gesprochene Inhalte > Systemstimme >
+Stimmen verwalten … > Deutsch.
+Anhören:  say -v "Anna (Premium)" "Hallo! Ich bin Fips, der kleine Drache."
 Alle deutschen Stimmen:  say -v "?" | grep de_DE
 
 Liest alle Sätze aus assets/audio/texts.json (erzeugt mit `node tools/list-texts.mjs`),
