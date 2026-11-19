@@ -3,6 +3,7 @@ import { go, setGuard, onScreen } from './engine/router.js';
 import { startPlaytime, setScreen, timeIsUp, PLAY_SCREENS } from './engine/playtime.js';
 import { initAudio } from './engine/audio.js';
 import { requestPersistence, initStorage } from './engine/storage.js';
+import { startShading } from './art/shade.js';
 import './screens/title.js';
 import './screens/figur.js';
 import './screens/map.js';
@@ -13,6 +14,7 @@ import './screens/eltern.js';
 import './screens/pause.js';
 
 async function boot() {
+  startShading(document.getElementById('app'));
   requestPersistence();
   await Promise.all([initAudio(), initStorage()]);
   // Spielzeit zählen und nach Erreichen des Tageslimits freundlich verabschieden.

@@ -1,6 +1,7 @@
 /* Burg Funkelstein – Gestaltung. Größen in vmin, damit alles auf jedem iPad passt.
    Für Drei- und Vierjährige: große Ziele (mindestens etwa 2,5 cm), wenig auf einmal, nichts Hektisches. */
 :root {
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .33 0 0 0 0 .2 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   --ink: #3d2b4a;
   --grass: #7fd36b; --grass2: #5cbf54; --sky: #8fd8ff;
   --gold: #ffd23f; --gold2: #e9a21f; --rose: #ff6b8b; --green: #5cc96b; --blue: #4aa3ff; --violet: #9067e0;
@@ -55,7 +56,7 @@ svg { display: block; }
 .round-btn.big { width: clamp(80px, 15vmin, 140px); height: clamp(80px, 15vmin, 140px); font-size: clamp(40px, 7.5vmin, 70px); }
 .round-btn.green { background: var(--green); color: #fff; }
 
-.panel { background: var(--parch); border: 4px solid var(--ink); border-radius: 3.2vmin; box-shadow: inset 0 0 0 .9vmin #fffaf0, inset 0 0 0 1.2vmin #f0dfbd, 0 .9vmin 0 rgba(61, 43, 74, .3); }
+.panel { background: var(--paper), linear-gradient(#fffaf0, var(--parch)); border: 4px solid var(--ink); border-radius: 3.2vmin; box-shadow: inset 0 0 0 .9vmin #fffaf0, inset 0 0 0 1.2vmin #f0dfbd, 0 .9vmin 0 rgba(61, 43, 74, .3); }
 
 .plank {
   font-weight: 900; font-size: clamp(20px, 3.8vmin, 36px); color: var(--cream); white-space: nowrap;
@@ -200,7 +201,7 @@ svg { display: block; }
 .choices { display: flex; gap: 4vmin; justify-content: center; }
 .choices:not([hidden]) { animation: pop .35s both; }
 .card {
-  padding: 2vmin 2.4vmin; border-radius: 3vmin; background: var(--cream); border: .55vmin solid var(--ink);
+  padding: 2vmin 2.4vmin; border-radius: 3vmin; background: var(--paper), linear-gradient(#fffdf7, var(--cream)); border: .55vmin solid var(--ink);
   box-shadow: 0 .9vmin 0 rgba(61, 43, 74, .3); transition: transform .1s, opacity .2s;
 }
 .card:active { transform: scale(.96); }
@@ -419,6 +420,10 @@ svg { display: block; }
 .gate-pad button { height: 54px; border-radius: 12px; background: var(--cream); border: 2px solid var(--ink); font-size: 24px; font-weight: 800; display: grid; place-items: center; }
 .gate-pad button.ok { background: var(--green); color: #fff; }
 .gate-pad .icon { width: 26px; height: 26px; }
+
+/* Sanfte Schatten unter allem, was man antippen oder ziehen kann */
+.item .thing, .gem .thing, .apple .thing, .pic-item .pic, .mini .dot .thing, .gift-card .gift-thumb, .figure-pick .figure-svg { filter: drop-shadow(0 .5vmin .25vmin rgba(61, 43, 74, .22)); }
+.fips-svg, .title-fips svg { filter: drop-shadow(0 .4vmin .3vmin rgba(61, 43, 74, .15)); }
 
 /* ---------- Effekte ---------- */
 .shake { animation: shake .42s; }
