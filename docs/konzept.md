@@ -26,7 +26,7 @@ Anders als bei der Schatzinsel:
 - **Kurze Runden:** 5 Aufgaben, etwa zwei Minuten.
 - **Nichts ist gesperrt.** Alle Orte und Stationen sind offen; eine leuchtende Fußspur zeigt, was als Nächstes passt.
 - **Kein Scheitern, keine Bewertung.** Keine Sterne-Noten, keine roten Punkte. Wer danebentippt, bekommt einen sanften Tipp; nach zwei Versuchen leuchtet die richtige Antwort. Jede Runde endet mit der Schatztruhe.
-- **Zwei Stufen:** „Klein" (etwa 3 Jahre: zwei Bilder zur Auswahl, Zählen bis 10, Vergleichen bis 5) und „Groß" (etwa 4 Jahre: drei Bilder, Zählen bis 20, Vergleichen bis 10). Die App wechselt behutsam von selbst, die Eltern können die Stufe festlegen.
+- **Zwei Stufen:** „Klein" (etwa 3 Jahre: Zählen bis 5, Vergleichen bis 5–6, einfache Buchstaben) und „Groß" (etwa 4 Jahre: Zählen bis 10, Ziffern, alle Großbuchstaben). Immer mindestens drei Antworten zur Auswahl. Die App wechselt behutsam von selbst, die Eltern können die Stufe festlegen.
 - **Ohne Kampf.** Ritter helfen, Drachen sind Freunde, Prinzessinnen und Prinzen sind genauso mutig wie Ritter. Turniere sind Geschicklichkeitsspiele (Ringe stechen), nie gegeneinander.
 
 ---
@@ -382,3 +382,40 @@ Der Zauberwald ist offen (keine Baustelle mehr) mit sieben Stationen: Farben sor
 - **Sprache:** 16 neue Sätze. Bis sie auf dem Mac erzeugt sind (`python3 tools/gen-audio.py`, die Stimme Anna ist gespeichert), spricht für diese Sätze die Sprachausgabe des iPads.
 
 **Geprüft** (automatisch im Browser, 1024 × 768 und 1180 × 820): alle sieben Stationen auf der leichtesten und der schwersten Stufe durchgespielt, Memory dreht falsche Paare zurück, Fee in der Burg, alle 14 Stationen der App erneut durchgespielt.
+
+---
+
+## 13. Überarbeitung nach dem ersten Test (20.11.2026)
+
+Rückmeldung: Die Sprache klang abgehackt, die Inhalte waren zu dünn (z. B. „Formen malen" mit nur Kreis und Kreuz, keine Buchstaben), manche Aufgaben waren zu leicht („Welcher Schild sieht genauso aus?").
+
+**Sprache**
+- Was zusammengehört, ist jetzt **ein** Clip statt mehrerer aneinandergehängter: Begrüßung, Geschichte, Abschied, leere Burg, „… kommt in deine Burg! Probier doch mal was anderes!".
+- Beim Mitzählen (eins, zwei, drei …) und beim Sortieren (Rot! Blau!) bricht Fips kein Wort mehr ab: Tippt das Kind schneller, sagt er danach nur die neueste Zahl.
+- Kein Piepen mehr gleichzeitig mit der Stimme (Zähl-Klick, Antippen von Fips).
+- „Und jetzt hier weiter!" nur beim ersten Strichwechsel, nicht bei jedem Strich.
+- Geprüft: In einem kompletten Durchspielen aller Stationen auf Stufe 1 und 4 schneidet die App selbst keinen Satz mehr ab (nur noch, wenn das Kind dazwischentippt – gewollt). Wie natürlich die Stimme klingt, lässt sich nur auf dem Gerät hören.
+- Die 129 neuen Sätze müssen noch auf dem Mac erzeugt werden (`python3 tools/gen-audio.py`), bis dahin spricht für sie die Gerätestimme.
+
+**Schreibturm (fünf statt drei Stationen)**
+- **Buchstaben spuren** (neu): alle Großbuchstaben und Umlaute in vier Stufen – von I, L, T, O, C, U, V bis B, R, G, J, Q, Ä, Ö, Ü. Wo es ein Bild gibt, zeigt Fips es dazu („A wie Apfel!").
+- **Mein Name** (neu): Die Eltern tragen den Namen ein, das Kind fährt ihn Buchstabe für Buchstabe nach. Ohne Namen ist die Station nicht zu sehen.
+- **Formen malen**: 19 Formen und Bilder statt 4 – Kreis, Kreuz, Ei, Schneckenhaus, Mond, Sonne, Luftballon, Schneemann, Quadrat, Dreieck, Tür, Edelstein, Haus, Fahne, Turm, Stern, Herz, Tanne. Fertige Bilder werden ausgemalt.
+- **Drachenwege, Wellen und Zinnen**: 8–10 verschiedene Wege je Stufe (vorher 5), mit Ecken, Treppen, Zinnen und Schleifen.
+
+**Schatzkammer (sechs statt vier Stationen)**
+- **In die Schatulle**: echtes Zählen. Die Schatulle schließt nicht mehr von selbst bei der richtigen Zahl – das Kind muss aufhören und auf den Haken tippen. Zu viele? Antippen holt eins heraus. Die Hilfspunkte gibt es nur noch auf Stufe 1.
+- **Zahlen kennen** (neu): Menge → Ziffer und Ziffer → Menge, bis 3 / 5 / 8 / 10.
+- **Einer kommt dazu** (neu): Man sieht, wie einer dazukommt oder weggeht, und sagt, wie viele es jetzt sind.
+- Überall mindestens drei Antworten; „Wo sind mehr?" ab Stufe 2 auch mit „gleich viele" und mit Edelsteinen und Kronen statt nur Äpfeln.
+
+**Zauberwald**
+- **Was ist gleich?**: Jeder falsche Schild unterscheidet sich vom richtigen in **genau einer** Sache (gleiche Farbe, anderes Zeichen; gleiches Zeichen, andere Farbe; auf Stufe 3–4 Anzahl der Zeichen, Farbe der Zeichen, Streifen). Drei bis vier Schilde. Man muss wirklich vergleichen.
+- **Farben sortieren**: 2–5 Farben, 5–10 Edelsteine, ungleich verteilt.
+- **Schatten**: drei bis vier statt zwei bis drei.
+- **Fahnen-Muster**: immer drei Fahnen zur Auswahl, längere Muster (ABBC).
+- **Was kommt zuerst?**: vier neue Bildfolgen (Raupe → Schmetterling, Malen, Geschenk auspacken, Regen → Regenbogen), ab Stufe 2 immer drei Bilder ordnen.
+
+**Stufen:** Schon zwei leichte Runden (statt drei) machen eine Station schwerer – damit Kinder, denen es zu leicht ist, schneller dorthin kommen, wo es spannend wird.
+
+**Neue Prüfung (`node tools/audit.mjs`, läuft mit `tools/check.mjs`)**: erzeugt je Station und Stufe 300 Runden und zählt, wie viele verschiedene Aufgaben ein Kind bekommt und wie viele Antworten zur Auswahl stehen. Mindestens 6 / 8 / 8 / 10 verschiedene Aufgaben und 3 Antworten (Stufe 1 bis zu 2) – sonst schlägt die Prüfung fehl. Dazu inhaltliche Regeln (z. B. die Fallen bei den Schilden). Das ist der Teil, der vorher fehlte: Der alte Test prüfte nur, ob alles fehlerfrei läuft, nicht ob es reicht.

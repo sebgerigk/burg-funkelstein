@@ -7,7 +7,7 @@ import { stepOf, adapt } from '../engine/level.js';
 import { sfx, preload } from '../engine/audio.js';
 import { h, pick, wait, withTimeout, shake, burst, confetti, replay } from '../engine/util.js';
 import { PLACES } from '../content/places.js';
-import { T, giftText } from '../content/texts.js';
+import { T, giftText, giftMore, gemMore } from '../content/texts.js';
 import { offerGifts, firstGift, GEM } from '../content/castle.js';
 import { zaehlen } from '../games/zaehlen.js';
 import { spuren } from '../games/spuren.js';
@@ -90,6 +90,7 @@ register('round', (el, { place, idx }) => {
       alive: () => alive,
       say: text => fips.say(text),
       talk: text => fips.talk(text),
+      count: text => fips.count(text),
       setAnswer(node) { if (task) task.answer = node; },
       async correct({ target, say } = {}) {
         if (task) task.over = true;
@@ -100,7 +101,7 @@ register('round', (el, { place, idx }) => {
         if (task && task.answer) task.answer.classList.remove('glow');
         await Promise.all([withTimeout(fips.say(say || pick(T.praise)), 5000), wait(900)]);
       },
-      wrong({ target } = {}) {
+      wrong({ target, say } = {}) {
         sfx('wrong');
         shake(target);
         if (target) target.classList.add('tried');
@@ -116,7 +117,7 @@ register('round', (el, { place, idx }) => {
           return;
         }
         if (task.wrongs >= 2) showAnswer();
-        else fips.say(pick(T.retry));
+        else fips.say(say || pick(T.retry));
       },
       done() {
         if (!alive) return;
@@ -193,8 +194,8 @@ register('round', (el, { place, idx }) => {
       giftsEl.querySelectorAll('.gift-card').forEach(c => { if (c !== card) c.classList.add('away'); });
       card.classList.add('chosen');
       if (picked === GEM) addGem(); else ownGift(picked.id);
-      const said = [picked === GEM ? T.gem : giftText(picked)];
-      if (!special && today >= MAX_TODAY) said.push(T.chest_one);
+      const more = !special && today >= MAX_TODAY;
+      const said = picked === GEM ? (more ? gemMore() : T.gem) : (more ? giftMore(picked) : giftText(picked));
       await fips.say(said);
       if (!alive) return;
       actions.hidden = false;

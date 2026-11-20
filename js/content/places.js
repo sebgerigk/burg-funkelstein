@@ -13,6 +13,9 @@ export const PLACES = {
       { id: 'schreib-wege', title: 'Drachenwege', game: 'spuren', opts: { kind: 'wege' } },
       { id: 'schreib-wellen', title: 'Wellen und Zinnen', game: 'spuren', opts: { kind: 'wellen' } },
       { id: 'schreib-formen', title: 'Formen malen', game: 'spuren', opts: { kind: 'formen' } },
+      { id: 'schreib-buchstaben', title: 'Buchstaben spuren', game: 'spuren', opts: { kind: 'buchstaben' } },
+      // Nur zu sehen, wenn die Eltern den Namen eingetragen haben
+      { id: 'schreib-name', title: 'Mein Name', game: 'spuren', opts: { kind: 'name' }, needsName: true },
     ],
   },
   zahl: {
@@ -24,7 +27,9 @@ export const PLACES = {
       { id: 'zahl-zaehlen', title: 'Edelsteine zählen', game: 'zaehlen', opts: { kind: 'zaehlen' } },
       { id: 'zahl-einpacken', title: 'In die Schatulle', game: 'zaehlen', opts: { kind: 'einpacken' } },
       { id: 'zahl-blick', title: 'Auf einen Blick', game: 'zaehlen', opts: { kind: 'blick' } },
+      { id: 'zahl-ziffer', title: 'Zahlen kennen', game: 'zaehlen', opts: { kind: 'ziffer' } },
       { id: 'zahl-mehr', title: 'Wo sind mehr?', game: 'zaehlen', opts: { kind: 'mehr' } },
+      { id: 'zahl-dazu', title: 'Einer kommt dazu', game: 'zaehlen', opts: { kind: 'dazu' } },
     ],
   },
   musik: {

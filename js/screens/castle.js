@@ -34,7 +34,7 @@ register('castle', (el, { from = { name: 'map' }, highlight = null } = {}) => {
   preload([T.castle, T.castle_empty, ...GIFTS.filter(g => st.owned[g.id]).map(giftName)]);
   const fips = createFips({ autoHide: true });
   el.appendChild(fips.el);
-  fips.say(count || st.gems ? T.castle : [T.castle, T.castle_empty]);
+  fips.say(count || st.gems ? T.castle : T.castle_empty);
 
   el.querySelector('.back').addEventListener('click', () => { sfx('tap'); go(from.name, from.params); });
   el.querySelector('.castle-scene').addEventListener('click', e => {

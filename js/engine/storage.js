@@ -50,6 +50,7 @@ const defaults = () => ({
   // Einstellungen aus dem Elternbereich
   settings: {
     stufe: 'auto',            // 'auto' | 'klein' | 'gross'
+    name: '',                 // Name des Kindes für „Mein Name" (Großbuchstaben)
     limitMin: 15,             // Spielzeit pro Tag, 0 = ohne Limit
     places: { schreib: true, zahl: true, musik: true, wald: true },
   },

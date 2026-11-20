@@ -27,8 +27,13 @@ register('eltern', el => {
       <div class="eltern-body">
         <section>
           <h2>Stufe</h2>
-          <p>„Klein" passt für etwa Dreijährige (zwei Bilder zur Auswahl, Zählen bis 5), „Groß" für Vierjährige (drei Bilder, Zählen bis 10, später bis 20). Bei „Automatisch" passt sich jede Station von selbst an.</p>
+          <p>„Klein" passt für etwa Dreijährige (Zählen bis 5, einfache Buchstaben wie I, L, O), „Groß" für Vierjährige (Zählen bis 10, Ziffern, alle Großbuchstaben). Bei „Automatisch" passt sich jede Station von selbst an: nach zwei leichten Runden wird sie schwerer.</p>
           ${seg('stufe', [['auto', 'Automatisch'], ['klein', 'Klein'], ['gross', 'Groß']])}
+        </section>
+        <section>
+          <h2>Name des Kindes</h2>
+          <p>Für die Station „Mein Name" im Schreibturm: Ihr Kind fährt die Buchstaben seines Namens nach (Großbuchstaben, höchstens acht). Ohne Namen ist die Station nicht zu sehen.</p>
+          <input class="name-input" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="z. B. LENA" value="${(s.name || '').replace(/"/g, '')}">
         </section>
         <section>
           <h2>Spielzeit am Tag</h2>
@@ -75,6 +80,11 @@ register('eltern', el => {
       render();
     }));
     el.querySelector('.figure-again').addEventListener('click', () => go('figur'));
+    el.querySelector('.name-input').addEventListener('change', e => {
+      const name = e.target.value.toUpperCase().replace(/[^A-ZÄÖÜ]/g, '').slice(0, 8);
+      e.target.value = name;
+      setSetting('name', name);
+    });
     const reset = el.querySelector('.reset');
     reset.addEventListener('click', () => {
       if (!reset.classList.contains('sure')) { reset.classList.add('sure'); reset.textContent = 'Wirklich löschen?'; return; }

@@ -1,27 +1,66 @@
-// Schreibturm: Wege, Wellen und Formen mit dem Finger nachfahren.
+// Schreibturm: Wege, Wellen, Formen, Buchstaben und der eigene Name – mit dem Finger nachfahren.
 // Fips (als kleiner Kopf) wird über einen breiten Weg gezogen. Wer vom Weg abkommt,
 // verliert nichts: Fips bleibt einfach stehen, bis der Finger wieder bei ihm ist.
 import { shuffle, INK } from '../engine/util.js';
 import { sfx } from '../engine/audio.js';
-import { T } from '../content/texts.js';
+import { T, LETTER_WORDS } from '../content/texts.js';
 import { SPUREN, WIDTH } from '../content/paths.js';
+import { LETTERS } from '../content/letters.js';
 import { thingG, GEM_COLORS } from '../art/things.js';
-import { leastSeenFirst, markSeen } from '../engine/storage.js';
+import { picSvg } from '../art/wald.js';
+import { fitThumbs } from '../screens/castle.js';
+import { leastSeenFirst, markSeen, settings } from '../engine/storage.js';
 
 const TASKS = 5;
 const STEP = 4;          // Abstand der Prüfpunkte entlang des Weges
 const LOOKAHEAD = 8;     // so viele Prüfpunkte darf der Finger vorauseilen
 const GOALS = ['apfel', 'edelstein', 'krone'];
-const FILL = { kreis: '#ffd23f', quadrat: '#4aa3ff', dreieck: '#ff6b8b', kreuz: '#5cc96b' };
 
-function makeTasks({ kind }, step) {
-  const pool = SPUREN[kind][step].map((p, i) => ({ ...p, key: `${kind}:${step}:${i}` }));
-  let list = leastSeenFirst(pool, p => p.key);
-  while (list.length < TASKS) list = list.concat(shuffle(pool));
-  return list.slice(0, TASKS).map((p, i) => ({ kind, step, ...p, goal: GOALS[i % GOALS.length], color: GEM_COLORS[i % GEM_COLORS.length] }));
+// Buchstaben je Stufe, vom Leichten zum Schweren: erst gerade und einfache runde,
+// dann mehr Striche, dann Schrägen und Bögen, zuletzt Umlaute und knifflige Formen.
+const LETTER_STEPS = [
+  ['I', 'L', 'T', 'O', 'C', 'U', 'V'],
+  ['I', 'L', 'T', 'O', 'C', 'U', 'V', 'H', 'E', 'F', 'A', 'X', 'N'],
+  ['H', 'E', 'F', 'A', 'X', 'N', 'M', 'W', 'K', 'Z', 'S', 'D', 'P', 'Y'],
+  ['M', 'W', 'K', 'Z', 'S', 'D', 'P', 'Y', 'B', 'R', 'G', 'J', 'Q', 'Ä', 'Ö', 'Ü'],
+];
+
+/** Der Name aus dem Elternbereich, nur Buchstaben, die es zum Nachfahren gibt (höchstens acht). */
+export function nameLetters(name = settings().name) {
+  return [...String(name || '').toUpperCase()].filter(ch => LETTERS[ch]).slice(0, 8);
 }
 
-const prompt = t => (t.kind === 'formen' ? T.formen[t.shape] : T.weg);
+function pickFrom(pool, keyOf) {
+  let list = leastSeenFirst(pool, keyOf);
+  while (list.length < TASKS) list = list.concat(shuffle(pool));
+  return list.slice(0, TASKS);
+}
+
+function makeTasks({ kind, name }, step) {
+  const extra = i => ({ goal: GOALS[i % GOALS.length], color: GEM_COLORS[i % GEM_COLORS.length] });
+  if (kind === 'buchstaben') {
+    return pickFrom(LETTER_STEPS[step], L => 'b:' + L).map((L, i) => ({ kind, step, letter: L, strokes: LETTERS[L], key: 'b:' + L, ...extra(i) }));
+  }
+  if (kind === 'name') {
+    const letters = nameLetters(name);
+    return letters.map((L, i) => ({ kind, step, letter: L, strokes: LETTERS[L], key: `n:${i}:${L}`, index: i, word: letters, ...extra(i) }));
+  }
+  const pool = SPUREN[kind][step].map((p, i) => ({ ...p, key: `${kind}:${step}:${p.id || i}` }));
+  return pickFrom(pool, p => p.key).map((p, i) => ({ kind, step, ...p, ...extra(i) }));
+}
+
+function prompt(t) {
+  if (t.kind === 'formen') return T.formen[t.shape];
+  if (t.kind === 'buchstaben' || t.kind === 'name') return T.buchstabe(t.letter);
+  return T.weg;
+}
+
+function doneText(t) {
+  if (t.kind === 'formen') return T.formen_done[t.shape];
+  if (t.kind === 'buchstaben') return T.buchstabe_done(t.letter);
+  if (t.kind === 'name') return t.index === t.word.length - 1 ? T.name_done : undefined;
+  return undefined;
+}
 
 const fipsHead = () => `<g class="token-art" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round">
   <path d="M-12 -14 L-16 -26 L-6 -17Z M12 -14 L16 -26 L6 -17Z" fill="#fff4dc"/>
@@ -34,19 +73,30 @@ function mount(root, t, api) {
   const width = WIDTH[t.step];
   const tol = width * 0.85;
   const strokes = t.strokes;
-  const closed = t.kind === 'formen' && t.shape !== 'kreuz';
-  root.innerHTML = `<div class="trace-wrap panel">
+  const isLetter = t.kind === 'buchstaben' || t.kind === 'name';
+  const fills = t.fill || [];
+  const firstFill = fills[0] && fills[0][1];
+  const inkColor = t.kind === 'formen' ? (firstFill && firstFill !== '#ffffff' ? firstFill : '#5cc96b') : isLetter ? '#4aa3ff' : '#9067e0';
+  const word = t.kind === 'buchstaben' && LETTER_WORDS[t.letter];
+  root.innerHTML = `<div class="trace-layout">
+    ${t.kind === 'name' ? `<div class="name-row">${t.word.map((L, i) => `<span class="${i < t.index ? 'done' : i === t.index ? 'now' : ''}">${L}</span>`).join('')}</div>` : ''}
+    <div class="trace-row">
+    <div class="trace-wrap panel">
     <svg class="trace-svg" viewBox="0 0 400 260">
-      ${closed ? `<path class="fill" d="${strokes[0]}" fill="${FILL[t.shape]}"/>` : ''}
+      ${fills.map(([i, c]) => `<path class="fill" d="${strokes[i]}" fill="${c}"/>`).join('')}
       <g class="road">${strokes.map(d => `<path d="${d}" stroke-width="${width + 8}" class="road-edge"/><path d="${d}" stroke-width="${width}" class="road-top"/>`).join('')}</g>
       <g class="guide">${strokes.map(d => `<path d="${d}"/>`).join('')}</g>
-      <g class="ink">${strokes.map(d => `<path d="${d}" stroke-width="${width * 0.5}" stroke="${t.kind === 'formen' ? FILL[t.shape] : '#9067e0'}"/>`).join('')}</g>
+      <g class="ink">${strokes.map(d => `<path d="${d}" stroke-width="${width * 0.5}" stroke="${inkColor}"/>`).join('')}</g>
       <g class="starts"></g>
       <g class="goal"></g>
       <g class="demo"></g>
       <g class="token"><circle class="ring" r="26"/>${fipsHead()}</g>
     </svg>
+    </div>
+    ${word ? `<div class="letter-pic card">${picSvg(word[1])}<b>${t.letter}</b></div>` : ''}
+    </div>
   </div>`;
+  if (word) fitThumbs(root);
 
   const svg = root.querySelector('.trace-svg');
   const inks = [...root.querySelectorAll('.ink path')];
@@ -60,7 +110,7 @@ function mount(root, t, api) {
 
   // Ziel am Ende (bei Wegen und Wellen) und Startnummern bei mehreren Strichen.
   const lastPath = guides[guides.length - 1];
-  if (t.kind !== 'formen') {
+  if (t.kind === 'wege' || t.kind === 'wellen') {
     const end = lastPath.getPointAtLength(lastPath.getTotalLength());
     goal.innerHTML = thingG(t.goal, end.x, end.y, 0.42, t.color);
   }
@@ -71,7 +121,7 @@ function mount(root, t, api) {
     }).join('');
   }
 
-  let cur = -1, samples = [], idx = 0, len = 0, active = false, finished = false, ticks = 0;
+  let cur = -1, samples = [], idx = 0, len = 0, active = false, finished = false, toldNext = false;
 
   function setStroke(k) {
     cur = k;
@@ -91,7 +141,7 @@ function mount(root, t, api) {
   // Ein kleiner Punkt zeigt, wohin es geht – nur solange der Finger nicht unterwegs ist.
   let cue = false;   // Hinweise erst nach der Ansage (während Fips spricht, soll nichts zappeln)
   function showDemo() {
-    if (!cue) return;
+    if (!cue || len < 4) return;
     demo.innerHTML = `<circle r="7"><animateMotion dur="${Math.max(1.4, len / 120).toFixed(2)}s" repeatCount="3" path="${strokes[cur]}"/></circle>`;
   }
 
@@ -118,6 +168,8 @@ function mount(root, t, api) {
       token.classList.add('held');
       demo.innerHTML = '';
     }
+    // Ein Punkt (Ä, Ö, Ü) ist geschafft, sobald der Finger dort ist.
+    if (len < 4) { idx = samples.length - 1; moveToken(); strokeDone(); return; }
     let moved = false;
     for (;;) {
       let best = -1;
@@ -128,7 +180,6 @@ function mount(root, t, api) {
       moved = true;
     }
     if (!moved) return;
-    if (++ticks % 5 === 0) sfx('trace');
     moveToken();
     if (idx >= samples.length - 1) strokeDone();
   }
@@ -141,16 +192,25 @@ function mount(root, t, api) {
     if (cur + 1 < strokes.length) {
       sfx('pop');
       setStroke(cur + 1);
-      api.say(T.weiter);
+      // „Und jetzt hier weiter" nur beim ersten Mal – sonst redet Fips bei jedem Strich dazwischen.
+      if (!toldNext) { toldNext = true; api.say(T.weiter); }
       return;
     }
     finished = true;
     demo.innerHTML = '';
     root.querySelectorAll('.start-num').forEach(n => n.classList.add('done'));
     markSeen(t.key);
-    if (closed) root.querySelector('.fill').classList.add('show');
-    if (t.kind !== 'formen') { goal.classList.add('got'); token.classList.add('eat'); }
-    await api.correct({ target: t.kind === 'formen' ? svg : goal, say: t.kind === 'formen' ? T.formen_done[t.shape] : undefined });
+    root.querySelectorAll('.fill').forEach(f => f.classList.add('show'));
+    if (t.kind === 'wege' || t.kind === 'wellen') { goal.classList.add('got'); token.classList.add('eat'); }
+    else token.classList.add('away');
+    const pic = root.querySelector('.letter-pic');
+    if (pic) pic.classList.add('show');
+    if (t.kind === 'name') {
+      const span = root.querySelectorAll('.name-row span')[t.index];
+      span.classList.remove('now');
+      span.classList.add('done');
+    }
+    await api.correct({ target: t.kind === 'wege' || t.kind === 'wellen' ? goal : svg, say: doneText(t) });
     api.done();
   }
 
@@ -172,7 +232,9 @@ function mount(root, t, api) {
 
 export const spuren = {
   makeTasks,
+  sig: t => t.key,
+  choices: () => null,
   prompt,
   mount,
-  texts: t => [prompt(t), T.weiter, t.shape ? T.formen_done[t.shape] : ''],
+  texts: t => [prompt(t), T.weiter, doneText(t), T.name_done].filter(Boolean),
 };

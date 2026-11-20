@@ -16,6 +16,8 @@ const OBJECTS = ['krone', 'edelstein', 'hufeisen', 'brunnen'];
 const GROUPS = [ANIMALS, PLANTS, OBJECTS];
 const ALL = GROUPS.flat();
 const COLOR_IDS = ['rot', 'blau', 'gelb', 'gruen', 'lila'];
+// Bildfolgen, die schon Dreijährige sicher ordnen
+const EASY_SEQ = ['ei', 'blume', 'schneemann', 'turm', 'apfel', 'geschenk', 'malen', 'regen'];
 
 // Wie viele Aufgaben eine Runde hat (Memory und Sortieren dauern länger).
 const COUNT = { farben: 4, schatten: 4, memory: 3 };
@@ -32,34 +34,45 @@ function makeTasks({ kind }, step) {
 }
 
 const MAKE = {
-  // Edelsteine in Truhen der gleichen Farbe: Klein 2 Farben, Groß 3–4 Farben.
+  // Edelsteine in Truhen der gleichen Farbe: mehr Farben und mehr Edelsteine je Stufe.
   farben(step) {
-    const nColors = [2, 2, 3, 4][step];
-    const nGems = [4, 5, 6, 8][step];
-    const colors = shuffle(COLOR_IDS.slice(0, 4)).slice(0, nColors);
-    const gems = shuffle(Array.from({ length: nGems }, (_, k) => colors[k % nColors]));
+    const nColors = [2, 3, 4, 5][step];
+    const nGems = [rnd(5, 6), rnd(6, 7), rnd(8, 9), 10][step];
+    const colors = shuffle(COLOR_IDS).slice(0, nColors);
+    // Jede Farbe mindestens einmal, der Rest zufällig – so ist nicht jede Farbe gleich oft da.
+    const gems = shuffle([...colors, ...Array.from({ length: nGems - nColors }, () => pick(colors))]);
     return { kind: 'farben', colors, gems };
   },
-  // Wappenschild: grob (Farbe) -> fein (Zeichen, Anzahl).
+  // Wappenschild mit Fallen: Jeder falsche Schild unterscheidet sich vom richtigen in GENAU EINER Sache
+  // (gleiche Farbe, aber anderes Zeichen; gleiches Zeichen, aber andere Farbe …). Man muss also
+  // wirklich vergleichen. Je Stufe feinere Unterschiede und mehr Schilde.
   paare(step) {
-    const nChoices = step < 2 ? 2 : 3;
-    const base = { color: COLORS[pick(['rot', 'blau', 'gruen', 'lila'])], emblem: pick(EMBLEMS), ecolor: '#fff', count: step === 3 ? rnd(1, 2) : 1, stripe: false };
-    const key = s => JSON.stringify(s);
+    const ATTRS = [['color', 'emblem'], ['color', 'emblem', 'ecolor'], ['emblem', 'ecolor', 'count'], ['count', 'stripe', 'ecolor', 'emblem']][step];
+    const nChoices = [3, 3, 4, 4][step];
+    const SHIELD = ['rot', 'blau', 'gruen', 'lila'];
+    const base = {
+      color: COLORS[pick(SHIELD)], emblem: pick(EMBLEMS), ecolor: pick(['#fff', '#ffd23f']),
+      count: step >= 2 ? rnd(1, 3) : 1, stripe: step === 3 ? Math.random() < 0.5 : false,
+    };
+    const vary = {
+      color: o => { o.color = COLORS[pick(SHIELD.filter(c => COLORS[c] !== base.color))]; },
+      emblem: o => { o.emblem = pick(EMBLEMS.filter(e => e !== base.emblem)); },
+      ecolor: o => { o.ecolor = base.ecolor === '#fff' ? '#ffd23f' : '#fff'; },
+      count: o => { o.count = pick([1, 2, 3].filter(c => c !== base.count)); },
+      stripe: o => { o.stripe = !base.stripe; },
+    };
+    const key = o => JSON.stringify([o.color, o.emblem, o.ecolor, o.count, o.stripe]);
     const others = new Map();
     for (let guard = 0; others.size < nChoices - 1 && guard < 200; guard++) {
       const o = { ...base };
-      if (step === 0) o.color = COLORS[pick(['rot', 'blau', 'gruen', 'lila', 'gelb'])];
-      else if (step === 1) o.emblem = pick(EMBLEMS);
-      else if (step === 2) { if (Math.random() < 0.5) o.color = COLORS[pick(['rot', 'blau', 'gruen', 'lila', 'gelb'])]; else o.emblem = pick(EMBLEMS); }
-      else { if (Math.random() < 0.6) o.count = rnd(1, 3); else o.stripe = true; }
+      vary[ATTRS[guard % ATTRS.length]](o);
       if (key(o) !== key(base)) others.set(key(o), o);
     }
-    const choices = shuffle([{ ...base, right: true }, ...others.values()]);
-    return { kind: 'paare', target: base, choices };
+    return { kind: 'paare', target: base, choices: shuffle([{ ...base, right: true }, ...others.values()]) };
   },
-  // Schatten: Klein 2, Groß 3. Stufe 1 und 3: ähnliche Formen (aus derselben Gruppe).
+  // Schatten: Klein 3, Groß 4. Stufe 2 und 4: ähnliche Formen (aus derselben Gruppe).
   schatten(step) {
-    const n = step < 2 ? 2 : 3;
+    const n = step < 2 ? 3 : 4;
     const similar = step === 1 || step === 3;
     const pool = similar ? pick(GROUPS.filter(g => g.length >= n)) : ALL;
     const ids = take(pool, n, 'schatten:');
@@ -71,8 +84,8 @@ const MAKE = {
     const ids = take(ALL, pairs, 'memory:');
     return { kind: 'memory', ids, cards: shuffle([...ids, ...ids]), preview: [2200, 1800, 1200, 0][step] };
   },
-  // Was passt nicht? Stufe 0: zwei gleiche + ein ganz anderes; 1: zwei gleiche + ein ähnliches;
-  // 2: drei gleiche + ein ähnliches; 3: drei verschiedene aus einer Gruppe + eins aus einer anderen.
+  // Was passt nicht? Stufe 1: zwei gleiche + ein ganz anderes; 2: zwei gleiche + ein ähnliches;
+  // 3: drei gleiche + ein ähnliches; 4: drei verschiedene aus einer Gruppe + eins aus einer anderen.
   passt(step) {
     const group = pick(GROUPS);
     const other = pick(GROUPS.filter(g => g !== group));
@@ -84,21 +97,23 @@ const MAKE = {
     else { odd = pick(other); pics = [...shuffle(group).slice(0, 3), odd]; }
     return { kind: 'passt', pics: shuffle(pics.map(id => ({ id }))), odd };
   },
-  // Fahnen-Muster: AB (Klein), AAB/ABB und ABC (Groß).
+  // Fahnen-Muster: AB (Klein), AAB/ABB und ABC (Groß). Immer drei Fahnen zur Auswahl.
   muster(step) {
     const cols = shuffle(COLOR_IDS);
-    const unit = [['A', 'B'], ['A', 'B'], pick([['A', 'A', 'B'], ['A', 'B', 'B']]), ['A', 'B', 'C']][step].map(x => cols['ABC'.indexOf(x)]);
-    const shown = [4, rnd(3, 5), 5, 5][step];
+    const unit = [['A', 'B'], pick([['A', 'B'], ['A', 'A', 'B']]), pick([['A', 'A', 'B'], ['A', 'B', 'B']]), pick([['A', 'B', 'C'], ['A', 'B', 'B', 'C']])][step]
+      .map(x => cols['ABC'.indexOf(x)]);
+    const shown = [4, rnd(4, 5), rnd(5, 6), rnd(5, 7)][step];
     const seq = Array.from({ length: shown + 1 }, (_, k) => unit[k % unit.length]);
     const answer = seq.pop();
-    const options = shuffle([...new Set([...unit, ...(step >= 2 ? [cols[3]] : [])])]).slice(0, step < 2 ? 2 : 3);
-    if (!options.includes(answer)) options[0] = answer;
+    const pool = [...new Set(unit)];
+    const options = [answer, ...shuffle(pool.filter(c => c !== answer)), ...cols.filter(c => !pool.includes(c))].slice(0, 3);
     return { kind: 'muster', seq, answer, options: shuffle(options) };
   },
-  // Was kommt zuerst? Klein: Anfang und Ende – was war zuerst? Groß: drei Bilder ordnen.
+  // Was kommt zuerst? Stufe 1: Anfang und Ende – was war zuerst? Ab Stufe 2: drei Bilder ordnen.
   ablauf(step, i, order) {
-    const id = order[i % order.length];
-    const frames = step < 2 ? (step === 0 ? [0, 2] : pick([[0, 2], [0, 1], [1, 2]])) : [0, 1, 2];
+    const pool = step < 2 ? order.filter(id => EASY_SEQ.includes(id)) : order;
+    const id = pool[i % pool.length];
+    const frames = step === 0 ? [0, 2] : [0, 1, 2];
     return { kind: 'ablauf', id, frames, shuffled: shuffle(frames) };
   },
 };
@@ -135,7 +150,7 @@ function mountFarben(root, t, api) {
       chest.querySelector('.chest-inside').insertAdjacentHTML('beforeend', thingSvg('edelstein', COLORS[gem.dataset.c]));
       root.querySelectorAll('.glow').forEach(g => g.classList.remove('glow'));
       sfx('place');
-      api.talk(T.farbe[gem.dataset.c]);
+      api.count(T.farbe[gem.dataset.c]);
       if (--left === 0) api.correct({ target: root.querySelector('.chest-row') }).then(() => api.done());
       else api.setAnswer(nextGem());
       return true;
@@ -317,8 +332,35 @@ function mountAblauf(root, t, api) {
 
 const MOUNT = { farben: mountFarben, paare: mountPaare, schatten: mountSchatten, memory: mountMemory, passt: mountPasst, muster: mountMuster, ablauf: mountAblauf };
 
+const SIG = {
+  farben: t => t.colors.slice().sort().map(c => c + t.gems.filter(g => g === c).length).join(),
+  paare: t => JSON.stringify([t.target, t.choices.map(c => JSON.stringify({ ...c, right: undefined })).sort()]),
+  schatten: t => t.ids.slice().sort().join(),
+  memory: t => t.ids.slice().sort().join(),
+  passt: t => t.pics.map(p => p.id).sort().join(),
+  muster: t => t.seq.join() + '>' + t.answer,
+  ablauf: t => t.id + t.frames.join(),
+};
+const CHOICES = {
+  farben: t => t.colors.length, paare: t => t.choices.length, schatten: t => t.ids.length, memory: t => t.cards.length,
+  passt: t => t.pics.length, muster: t => t.options.length, ablauf: t => t.frames.length,
+};
+
+// Für tools/audit.mjs: Regeln, die eine Aufgabe erfüllen muss, damit sie nicht zu leicht ist.
+const CHECK = {
+  // Jeder falsche Schild unterscheidet sich in genau einer Sache vom richtigen (sonst sieht man es sofort).
+  paare: t => {
+    const keys = ['color', 'emblem', 'ecolor', 'count', 'stripe'];
+    const bad = t.choices.filter(c => !c.right).find(c => keys.filter(k => c[k] !== t.target[k]).length !== 1);
+    return bad ? 'ein falscher Schild unterscheidet sich in mehr als einer Sache' : null;
+  },
+};
+
 export const wald = {
   makeTasks,
+  check: t => (CHECK[t.kind] ? CHECK[t.kind](t) : null),
+  sig: t => t.kind + ':' + SIG[t.kind](t),
+  choices: t => CHOICES[t.kind](t),
   prompt,
   mount: (root, t, api) => MOUNT[t.kind](root, t, api),
   texts: t => [prompt(t), T.memory_look, ...Object.values(T.farbe)],

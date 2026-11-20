@@ -18,8 +18,8 @@ register('figur', el => {
   fips.el.classList.add('big');
   el.appendChild(fips.el);
   const goOn = el.querySelector('.go-on');
-  preload([T.hello, T.who, ...Object.values(FIGURES).map(f => f.you), ...T.story, T.map]);
-  fips.say([T.hello, T.who]);
+  preload([T.intro, ...Object.values(FIGURES).map(f => f.you), T.story, T.map]);
+  fips.say(T.intro);
 
   let chosen = null;
   el.querySelector('.figures').addEventListener('click', async e => {

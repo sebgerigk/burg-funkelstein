@@ -5,12 +5,12 @@
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { allTexts, giftText, giftName } from '../js/content/texts.js';
+import { allTexts, giftText, giftName, giftMore } from '../js/content/texts.js';
 import { allPlaceTexts } from '../js/content/places.js';
 import { GIFTS, GEM } from '../js/content/castle.js';
 
 export function texts() {
-  return allTexts([...allPlaceTexts(), ...GIFTS.flatMap(g => [giftText(g), giftName(g)]), giftName(GEM)]);
+  return allTexts([...allPlaceTexts(), ...GIFTS.flatMap(g => [giftText(g), giftName(g), giftMore(g)]), giftName(GEM)]);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

@@ -86,6 +86,11 @@ export function stationIcon(id) {
       <path d="M86 16 Q96 30 90 44" fill="none" stroke-dasharray="4 8"/>`);
     case 'zahl-blick': return box(`<rect x="14" y="14" width="56" height="56" rx="12" fill="#fff"/><circle cx="30" cy="30" r="6" fill="${INK}" stroke="none"/><circle cx="42" cy="42" r="6" fill="${INK}" stroke="none"/><circle cx="54" cy="54" r="6" fill="${INK}" stroke="none"/>
       ${thingG('edelstein', 76, 74, .22, '#ff6b8b')}${thingG('edelstein', 90, 90, .22, '#ff6b8b')}${thingG('edelstein', 104, 106, .22, '#ff6b8b')}`);
+    case 'schreib-buchstaben': return box(`<path d="M30 100 L52 22 L74 100 M38 74 H66" fill="none" stroke="#4aa3ff" stroke-width="9"/>${thingG('apfel', 92, 82, .3)}`);
+    case 'schreib-name': return box(`<rect x="10" y="34" width="100" height="52" rx="10" fill="#fff4dc"/><path d="M24 48 V72 H38 M48 48 V72 M48 48 H60 M48 60 H58 M48 72 H60 M70 72 V48 L84 72 V48 M92 72 L100 48 L108 72 M95 64 H105" fill="none" stroke="#9067e0" stroke-width="5"/>`);
+    case 'zahl-ziffer': return box(`<rect x="12" y="20" width="44" height="64" rx="8" fill="#fff"/><text x="34" y="70" text-anchor="middle" font-size="46" font-weight="900" fill="#4aa3ff" stroke="none">3</text>
+      ${thingG('edelstein', 80, 34, .22, '#ff6b8b')}${thingG('edelstein', 98, 56, .22, '#ff6b8b')}${thingG('edelstein', 80, 78, .22, '#ff6b8b')}`);
+    case 'zahl-dazu': return box(`${thingG('apfel', 30, 70, .3)}${thingG('apfel', 58, 70, .3)}<path d="M74 66 H98 M86 54 V78" stroke="#5cc96b" stroke-width="8"/>${thingG('apfel', 92, 30, .3)}`);
     case 'zahl-mehr': return box(`<path d="M6 70 H54 L48 104 H12Z" fill="#d9a35f"/><path d="M66 70 H114 L108 104 H72Z" fill="#d9a35f"/>
       ${thingG('apfel', 30, 58, .26)}${thingG('apfel', 78, 58, .26)}${thingG('apfel', 102, 58, .26)}${thingG('apfel', 90, 38, .26)}`);
     case 'wald-farben': return box(`<rect x="10" y="70" width="44" height="36" rx="6" fill="#e8504f"/><rect x="66" y="70" width="44" height="36" rx="6" fill="#4aa3ff"/>

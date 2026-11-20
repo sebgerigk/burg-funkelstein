@@ -96,6 +96,7 @@ export function createFips({ autoHide = false } = {}) {
 
   /** Spricht einen Satz oder mehrere nacheinander. Endet, wenn alles gesagt oder unterbrochen ist. */
   async function say(text) {
+    pending = null;
     show(text);
     const id = ++talkId;
     for (const t of last) {
@@ -110,6 +111,17 @@ export function createFips({ autoHide = false } = {}) {
     el.classList.add('talking');
     await speak(text);
     if (id === talkId) el.classList.remove('talking');
+  }
+
+  // Mitzählen (eins, zwei, drei …) und kurze Wörter beim Sortieren: nie mitten im Wort abbrechen.
+  // Tippt das Kind schneller, als Fips sprechen kann, sagt er danach nur die neueste Zahl.
+  let counting = false, pending = null;
+  async function count(text) {
+    if (counting) { pending = text; return; }
+    counting = true;
+    await talk(text);
+    counting = false;
+    if (pending) { const next = pending; pending = null; count(next); }
   }
 
   function cheer() {
@@ -136,7 +148,6 @@ export function createFips({ autoHide = false } = {}) {
   setTimeout(idle, 2000);
 
   btn.addEventListener('click', () => {
-    sfx('tap');
     if (onTap) onTap();
     else if (last.length) say(last);
   });
@@ -144,6 +155,7 @@ export function createFips({ autoHide = false } = {}) {
   return {
     el, say, show, cheer,
     talk: text => talk(text),
+    count,
     /** Eigene Reaktion auf Antippen (z. B. „Aufgabe wiederholen" in der Runde). */
     onTap(fn) { onTap = fn; },
     sleep(on = true) { el.classList.toggle('asleep', on); },
